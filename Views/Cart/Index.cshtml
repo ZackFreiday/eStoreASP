@@ -1,0 +1,108 @@
+﻿@model List<eStoreASP.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Your Cart";
+    decimal grandTotal = Model.Sum(item => item.Price * item.Quantity);
+}
+
+<h2 class="mb-4">Your Cart</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Your cart is empty.
+    </div>
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th class="text-center">Quantity</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Price.ToString("F2") €</td>
+
+                            <td class="text-center">
+                                <a asp-action="Decrease"
+                                   asp-route-id="@item.ProductId"
+                                   class="btn btn-outline-warning btn-sm px-3">
+                                    −
+                                </a>
+
+                                <span class="mx-3 fw-bold">@item.Quantity</span>
+
+                                <a asp-action="Add"
+                                   asp-route-id="@item.ProductId"
+                                   class="btn btn-outline-success btn-sm px-3">
+                                    +
+                                </a>
+                            </td>
+
+                            <td>
+                                @((item.Price * item.Quantity).ToString("F2")) €
+                            </td>
+
+                            <td class="text-center">
+                                <a asp-action="Remove"
+                                   asp-route-id="@item.ProductId"
+                                   class="btn btn-outline-danger btn-sm">
+                                    Remove
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <hr />
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h4 class="mb-0">
+                    Grand Total:
+                    <span class="text-success">
+                        @grandTotal.ToString("F2") €
+                    </span>
+                </h4>
+
+                <form asp-controller="Cart"
+                      asp-action="Checkout"
+                      method="post">
+                    <button type="submit"
+                            class="btn btn-success btn-lg shadow-sm">
+                        Checkout
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+}

@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to eStoreASP</h1>
+
+    <p class="lead mt-3">
+        A functional e-commerce system built with ASP.NET Core MVC.
+    </p>
+
+    <hr class="my-4" />
+
+    <div class="row mt-4">
+
+        <div class="col-md-4">
+            <h4>🛍 Browse Products</h4>
+            <p>Explore our catalog and view detailed product information.</p>
+        </div>
+
+        <div class="col-md-4">
+            <h4>🛒 Shopping Cart</h4>
+            <p>Add items to your cart, adjust quantities, and manage your order.</p>
+        </div>
+
+        <div class="col-md-4">
+            <h4>📦 Order Management</h4>
+            <p>Place orders and track their status in real time.</p>
+        </div>
+
+    </div>
+
+    <div class="mt-4">
+        <a asp-controller="Store" asp-action="Index"
+           class="btn btn-primary btn-lg shadow-sm">
+            Start Shopping
+        </a>
+    </div>
+</div>

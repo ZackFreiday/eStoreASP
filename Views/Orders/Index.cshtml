@@ -1,0 +1,110 @@
+﻿@model List<eStoreASP.Models.Order>
+@using eStoreASP.Models
+
+@{
+    ViewData["Title"] = "Admin Orders";
+}
+
+<h2 class="mb-4">All Orders (Admin)</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No orders found.
+    </div>
+}
+else
+{
+    @foreach (var order in Model)
+    {
+        var isCompleted = order.Status == OrderStatus.Completed;
+
+        string badgeClass = order.Status switch
+        {
+            OrderStatus.Pending => "bg-warning text-dark",
+            OrderStatus.Completed => "bg-success",
+            _ => "bg-secondary"
+        };
+
+        <div class="card mb-4 shadow-sm @(isCompleted ? "border-success" : "")">
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Order #@order.Id</h5>
+
+                    <span class="badge @badgeClass fs-6">
+                        @order.Status
+                    </span>
+                </div>
+
+                <hr />
+
+                <p><strong>User:</strong> @order.UserId</p>
+                <p><strong>Date:</strong> @order.OrderDate.ToString("g")</p>
+                <p>
+                    <strong>Total:</strong>
+                    <span class="text-success fw-bold">
+                        @order.TotalAmount.ToString("F2") €
+                    </span>
+                </p>
+
+                @if (!isCompleted)
+                {
+                    <form asp-action="UpdateStatus"
+                          method="post"
+                          class="mb-3 d-flex align-items-center gap-2">
+
+                        <input type="hidden" name="id" value="@order.Id" />
+
+                        <select name="status"
+                                class="form-select w-auto">
+                            <option value="Pending"
+                                    selected="@(
+                                        order.Status == OrderStatus.Pending
+                                    )">
+                                Pending
+                            </option>
+                            <option value="Completed">
+                                Completed
+                            </option>
+                        </select>
+
+                        <button type="submit"
+                                class="btn btn-primary btn-sm shadow-sm">
+                            Update
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <div class="alert alert-success py-2">
+                        This order is completed and cannot be modified.
+                    </div>
+                }
+
+                <table class="table table-bordered table-hover align-middle mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th class="text-center">Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in order.OrderItems)
+                        {
+                            <tr>
+                                <td>@item.ProductName</td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td>
+                                    @((item.Price * item.Quantity).ToString("F2")) €
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    }
+}
